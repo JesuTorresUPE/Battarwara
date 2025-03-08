@@ -1,79 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>BattarWara index</title>
-    <link rel="stylesheet" href="../styles/styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <title>Battarwara®</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <header class="header">
-        <!-- Aquí se encuentra la barra de menú y las opciones que se pueden hacer, así como el nombre de la empresa -->
         <nav class="menu_nav">
             <div class="logo">
-                <img src="../img/BattarwaraLogo.PNG" alt="Logo de BattarWara">
+                <img src="BattarwaraLogo.PNG" alt="Logo Battarwara" class="logo-img">
             </div>
         </nav>
     </header>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Inicio</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+    <ul class="nav_links">
+        <li><a href="#">Inicio</a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle">Productos</a>
+            <div class="dropdown-menu">
+                <a href="#">Cocina</a>
+                <a href="#">Recámara</a>
+                <a href="#">Limpieza</a>
+                <a href="#">Hogar</a>
+            </div>
+        </li>
+        <li><a href="#">Nosotros</a></li>
+        <li><a href="#">Contáctanos</a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle">Idiomas</a>
+            <div class="dropdown-menu">
+                <a href="#">Español</a>
+                <a href="#">Inglés</a>
+            </div>
+        </li>
+        <li><a href="#">Equipo 5</a></li>
+    </ul>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Productos
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown1">
-                        <li><a class="dropdown-item" href="#">Cocina</a></li>
-                        <li><a class="dropdown-item" href="#">Recámara</a></li>
-                        <li><a class="dropdown-item" href="#">Limpieza</a></li>
-                        <li><a class="dropdown-item" href="#">Hogar</a></li>
-                        <li><a class="dropdown-item" href="#">Contigo</a></li>
-                        <li><a class="dropdown-item" href="#">Baño</a></li>
-                        <li><a class="dropdown-item" href="#">Bienestar</a></li>
-                        <li><a class="dropdown-item" href="#">Ver todo</a></li>
-                    </ul>
-                </li>
+    <main class="container">
+        <section class="categories-section">
+            <h2>Lista de categorías</h2>
+            <div class="categories-grid">
+                <div class="category-card">
+                    <h3>Cocina</h3>
+                    <p>Recámara</p>
+                </div>
+                <div class="category-card">
+                    <h3>Limpieza</h3>
+                    <p>Hogar</p>
+                </div>
+                <div class="category-card">
+                    <h3>Contigo</h3>
+                    <p>Baño</p>
+                </div>
+                <div class="category-card">
+                    <h3>Bienestar</h3>
+                    <p>Ver todo</p>
+                </div>
+            </div>
+        </section>
 
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Nosotros</a>
-                </li>
+        <section class="about-section">
+            <h2>Nosotros</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ut diam quis quam vestibulum varius at vel nunc. Eliam eu felis nec quam porta lobortis. Quisque condimentum nibh ante, aliquam accumsan dolor laculis in. Ut porta, lacus eu auctor ornare, uma nisl tempor tellus, tempor pretium quam nulla la diam. Phasellus at lacinia lorem, pellentesque tristique risus. Vivamus sit amet elit cursus, ultrices dolor sed, dolichidum eran. Donec ornare nisl enim, vitae dictum lacus finibus et.</p>
+        </section>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contáctanos</a>
-                </li>
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Idiomas
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
-                        <li><a class="dropdown-item" href="#">Español</a></li>
-                        <li><a class="dropdown-item" href="#">Inglés</a></li>
-                    </ul>
-                </li>
-
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Equipo 5</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    <main>
-        <!-- Aquí encontraremos el contenido principal de nuestro index -->
+        <section class="contact-section">
+            <h2>Contáctanos</h2>
+            <form class="contact-form">
+                <div class="form-row">
+                    <input type="text" placeholder="Nombre">
+                    <input type="email" placeholder="E-mail">
+                </div>
+                <textarea placeholder="Mensaje"></textarea>
+                <button type="submit">Enviar</button>
+            </form>
+        </section>
     </main>
 
-    <footer>
-        <!-- Aquí deben venir los links a las redes de nuestra empresa, facebook, twitter, ig, etc -->
+    <footer class="footer">
+        <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
     </footer>
 </body>
 </html>
