@@ -2,83 +2,86 @@
 session_start();
 
 /**********************************************
- * MANEJO DE IDIOMAS
+ * MANEJO DE IDIOMAS CORREGIDO
  **********************************************/
 $available_langs = ['es', 'en'];
 $default_lang = 'es';
-$cookie_time = time() + (86400 * 30);
+$cookie_time = time() + (86400 * 30); // 30 días
 
+// Verificar si se solicita cambio de idioma
 if (isset($_GET['lang']) && in_array($_GET['lang'], $available_langs)) {
-    $_SESSION['lang'] = $_GET['lang'];
-    setcookie('lang', $_GET['lang'], $cookie_time, '/');
+    // Solo actualizar si es diferente al actual
+    if ($_GET['lang'] != ($_SESSION['lang'] ?? $default_lang)) {
+        $_SESSION['lang'] = $_GET['lang'];
+        setcookie('lang', $_GET['lang'], $cookie_time, '/');
+    }
+    // Redirección limpia para eliminar parámetros GET
+    header("Location: " . strtok($_SERVER['REQUEST_URI'], '?'));
+    exit;
 }
 
-if (isset($_COOKIE['lang'])) {
-    $_SESSION['lang'] = $_COOKIE['lang'];
-}
-
-$current_lang = $_SESSION['lang'] ?? $default_lang;
+// Cargar idioma desde cookie/sesión
+$current_lang = $_COOKIE['lang'] ?? $_SESSION['lang'] ?? $default_lang;
+$_SESSION['lang'] = $current_lang; // Asegurar consistencia
 
 /**********************************************
- * TRADUCCIONES
+ * TRADUCCIONES COMPLETAS
  **********************************************/
 $translations = [
     'es' => [
-        'comprar_ahora' => 'Comprar Ahora',
-        'agregar_carrito' => 'Agregar al Carrito',
-        'topper' => 'Topper Multiusos',
-        'dispensador' => 'Dispensador',
-        'porta_fruta' => 'Porta Fruta',
-        'cuchillos' => 'Cuchillos Multiusos',
-        'porta_galletas' => 'Porta galletas',
-        'producto1_precio' => '$299.00 MXN',
-        'producto2_precio' => '$199.00 MXN',
-        'producto3_precio' => '$219.00 MXN',
-        'producto4_precio' => '$223.00 MXN',
-        'producto5_precio' => '$48.00 MXN',
-        'error_password' => 'Las contraseñas no coinciden',
-        'error_registro' => 'Error al registrar: ',
-        'error_login' => 'Contraseña incorrecta',
-        'error_usuario' => 'Usuario no encontrado',
+        // Menú
         'inicio' => 'Inicio',
         'productos' => 'Productos',
         'nosotros' => 'Nosotros',
         'contacto' => 'Contáctanos',
         'idiomas' => 'Idiomas',
         'equipo' => 'Equipo 5',
+        
+        // Contenido
         'favoritos' => 'Favoritos del Mes',
-        'bienvenido' => 'Bienvenido',
-        'salir' => 'Salir',
-        'titulo_pagina' => 'Battarwara®',
-        'registrate' => '¿No tienes cuenta? Regístrate aquí',
-        'ingresar' => 'Ingresar',
-        'registrar' => 'Registrar',
+        'comprar_ahora' => 'Comprar Ahora',
+        'agregar_carrito' => 'Agregar al Carrito',
         'nosotros_texto' => 'Lorem ipsum dolor sit amet...',
-        'contacto_titulo' => 'Contáctanos',
+        
+        // Formularios
         'nombre' => 'Nombre',
         'email' => 'E-mail',
         'mensaje' => 'Mensaje',
         'enviar' => 'Enviar',
         'usuario' => 'Usuario',
         'password' => 'Contraseña',
-        'confirm_password' => 'Confirmar Contraseña'
+        'confirm_password' => 'Confirmar Contraseña',
+        
+        // Autenticación
+        'bienvenido' => 'Bienvenido',
+        'salir' => 'Salir',
+        'registrate' => '¿No tienes cuenta? Regístrate aquí',
+        'ingresar' => 'Ingresar',
+        'registrar' => 'Registrar',
+        
+        // Productos
+        'topper_title' => 'Topper Multiusos',
+        'dispensador_title' => 'Dispensador',
+        'portafruta_title' => 'Porta Fruta',
+        'cuchillos_title' => 'Cuchillos Multiusos',
+        'portagalletas_title' => 'Porta galletas'
     ],
     'en' => [
+        // Menú
         'inicio' => 'Home',
         'productos' => 'Products',
         'nosotros' => 'About Us',
         'contacto' => 'Contact',
         'idiomas' => 'Languages',
         'equipo' => 'Team 5',
+        
+        // Contenido
         'favoritos' => 'Monthly Favorites',
-        'bienvenido' => 'Welcome',
-        'salir' => 'Logout',
-        'titulo_pagina' => 'Battarwara®',
-        'registrate' => 'No account? Register here',
-        'ingresar' => 'Login',
-        'registrar' => 'Register',
+        'comprar_ahora' => 'Buy Now',
+        'agregar_carrito' => 'Add to Cart',
         'nosotros_texto' => 'Lorem ipsum dolor sit amet...',
-        'contacto_titulo' => 'Contact Us',
+        
+        // Formularios
         'nombre' => 'Name',
         'email' => 'Email',
         'mensaje' => 'Message',
@@ -86,22 +89,20 @@ $translations = [
         'usuario' => 'Username',
         'password' => 'Password',
         'confirm_password' => 'Confirm Password',
-        'comprar_ahora' => 'Buy Now',
-        'agregar_carrito' => 'Add to Cart',
-        'topper' => 'Multiuse Topper',
-        'dispensador' => 'Dispenser',
-        'porta_fruta' => 'Fruit Holder',
-        'cuchillos' => 'Multiuse Knives',
-        'porta_galletas' => 'Cookie Holder',
-        'producto1_precio' => '$299.00 USD',
-        'producto2_precio' => '$199.00 USD',
-        'producto3_precio' => '$219.00 USD',
-        'producto4_precio' => '$223.00 USD',
-        'producto5_precio' => '$48.00 USD',
-        'error_password' => 'Passwords do not match',
-        'error_registro' => 'Registration error: ',
-        'error_login' => 'Incorrect password',
-        'error_usuario' => 'User not found'
+        
+        // Autenticación
+        'bienvenido' => 'Welcome',
+        'salir' => 'Logout',
+        'registrate' => 'No account? Register here',
+        'ingresar' => 'Login',
+        'registrar' => 'Register',
+        
+        // Productos
+        'topper_title' => 'Multiuse Topper',
+        'dispensador_title' => 'Dispenser',
+        'portafruta_title' => 'Fruit Holder',
+        'cuchillos_title' => 'Multiuse Knives',
+        'portagalletas_title' => 'Cookie Holder'
     ]
 ];
 
@@ -195,7 +196,7 @@ if (isset($_GET['logout'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><?= $translations[$current_lang]['titulo_pagina'] ?></title>
+    <title>Battarwara</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -320,44 +321,44 @@ if (isset($_GET['logout'])) {
 
     <main class="container">
         <section class="carousel-section">
-            <h2>Favoritos del Mes</h2>
+            <h2><?= $translations[$current_lang]['favoritos'] ?></h2>
             <br>
             <div class="carousel-container">
                 <div class="carousel-track">
                     <div class="carousel-slide">
                         <img src="Topper.jpg" alt="Topper" class="category-img">
-                        <h3 class="product-title">Topper Multiusos</h3>
+                        <h3 class="product-title"><?= $translations[$current_lang]['topper_title'] ?></h3>
                         <p class="product-price">$299.00 MXN</p>
-                        <button class="buy-btn">Comprar Ahora</button>
-                        <button class="buy-btn">Agregar al Carrito</button>
+                        <button class="buy-btn"><?= $translations[$current_lang]['comprar_ahora'] ?></button>
+                        <button class="buy-btn"><?= $translations[$current_lang]['agregar_carrito'] ?></button>
                     </div>
                     <div class="carousel-slide">
                         <img src="Dispensador.jpg" alt="Dispensador" class="category-img">
-                        <h3 class="product-title">Dispensador</h3>
+                        <h3 class="product-title"><?= $translations[$current_lang]['dispensador_title'] ?></h3>
                         <p class="product-price">$199.00 MXN</p>
-                        <button class="buy-btn">Comprar Ahora</button>
-                        <button class="buy-btn">Agregar al Carrito</button>
+                        <button class="buy-btn"><?= $translations[$current_lang]['comprar_ahora'] ?></button>
+                        <button class="buy-btn"><?= $translations[$current_lang]['agregar_carrito'] ?></button>
                     </div>
                     <div class="carousel-slide">
                         <img src="PortaFruta.jpg" alt="PortaFruta" class="category-img">
-                        <h3 class="product-title">Porta Fruta</h3>
+                        <h3 class="product-title"><?= $translations[$current_lang]['portafruta_title'] ?></h3>
                         <p class="product-price">$219.00 MXN</p>
-                        <button class="buy-btn">Comprar Ahora</button>
-                        <button class="buy-btn">Agregar al Carrito</button>
+                        <button class="buy-btn"><?= $translations[$current_lang]['comprar_ahora'] ?></button>
+                        <button class="buy-btn"><?= $translations[$current_lang]['agregar_carrito'] ?></button>
                     </div>
                     <div class="carousel-slide">
                         <img src="Cuchillos.jpg" alt="Cuchillos" class="category-img">
-                        <h3 class="product-title">Cuchillos Multiusos</h3>
+                        <h3 class="product-title"><?= $translations[$current_lang]['cuchillos_title'] ?></h3>
                         <p class="product-price">$223.00 MXN</p>
-                        <button class="buy-btn">Comprar Ahora</button>
-                        <button class="buy-btn">Agregar al Carrito</button>
+                        <button class="buy-btn"><?= $translations[$current_lang]['comprar_ahora'] ?></button>
+                        <button class="buy-btn"><?= $translations[$current_lang]['agregar_carrito'] ?></button>
                     </div>
                     <div class="carousel-slide">
                         <img src="PortaGalletas.jpg" alt="PortaGalletas" class="category-img">
-                        <h3 class="product-title">Porta galletas</h3>
+                        <h3 class="product-title"><?= $translations[$current_lang]['portagalletas_title'] ?></h3>
                         <p class="product-price">$48.00 MXN</p>
-                        <button class="buy-btn">Comprar Ahora</button>
-                        <button class="buy-btn">Agregar al Carrito</button>
+                        <button class="buy-btn"><?= $translations[$current_lang]['comprar_ahora'] ?></button>
+                        <button class="buy-btn"><?= $translations[$current_lang]['agregar_carrito'] ?></button>
                     </div>
                 </div>
                 <button class="carousel-btn prev-btn">&lt;</button>
@@ -366,19 +367,20 @@ if (isset($_GET['logout'])) {
         </section>        
         
         <section class="about-section">
-            <h2>Nosotros</h2>
+        <h2><?= $translations[$current_lang]['nosotros'] ?></h2>
+        <p><?= $translations[$current_lang]['nosotros_texto'] ?></p>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ut diam quis quam vestibulum varius at vel nunc. Eliam eu felis nec quam porta lobortis. Quisque condimentum nibh ante, aliquam accumsan dolor laculis in. Ut porta, lacus eu auctor ornare, uma nisl tempor tellus, tempor pretium quam nulla la diam. Phasellus at lacinia lorem, pellentesque tristique risus. Vivamus sit amet elit cursus, ultrices dolor sed, dolichidum eran. Donec ornare nisl enim, vitae dictum lacus finibus et.</p>
         </section>
 
         <section class="contact-section">
-            <h2>Contáctanos</h2>
+            <h2><?= $translations[$current_lang]['contacto'] ?></h2>
             <form class="contact-form">
                 <div class="form-row">
-                    <input type="text" placeholder="Nombre">
-                    <input type="email" placeholder="E-mail">
+                    <input type="text" placeholder="<?= $translations[$current_lang]['nombre'] ?>">
+                    <input type="email" placeholder="<?= $translations[$current_lang]['email'] ?>">
                 </div>
-                <textarea placeholder="Mensaje"></textarea>
-                <button type="submit">Enviar</button>
+                <textarea placeholder="<?= $translations[$current_lang]['mensaje'] ?>"></textarea>
+                <button type="submit"><?= $translations[$current_lang]['enviar'] ?></button>
             </form>
         </section>
     </main>
