@@ -23,9 +23,8 @@ body {
 }
 
 .logo-img {
-    height: 120px; /* Tamaño aumentado del logo */
+    height: 120px;
     transition: transform 0.3s;
-    order: 1; /* Mantiene el logo a la izquierda */
 }
 
 .category-img {
@@ -40,11 +39,12 @@ body {
 
 .nav_links {
     display: flex;
-    margin-left: 1rem;
-    background-color:  beige;
-    padding: 1rem;
-    gap: 2rem;
+    gap: 2rem; /* Reemplaza el margin-left */
     list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1; /* Ocupa el espacio disponible */
+    justify-content: center; /* Centra los links */
 }
 
 .nav_links a {
@@ -64,11 +64,12 @@ body {
 }
 
 .menu_nav {
-    width: 100%;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: space-between; /* Distribuye el espacio */
+    align-items: center; /* Centra verticalmente */
+    width: 100%;
     padding: 0 2rem;
+    gap: 2rem; /* Espacio entre elementos */
 }
 
 .dropdown-menu {
@@ -314,20 +315,38 @@ button:hover {
     margin-bottom: 0.5rem;
 }
 
+.user-status {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
 .user-icon {
+    max-width: 40px !important; /* Fuerza el tamaño */
+    height: 40px !important;
+    margin-left: auto;
     cursor: pointer;
     transition: transform 0.3s;
-    color: #04ADC9;
-    font-size: 4rem; /* Tamaño aumentado */
-    margin-left: auto; /* Lo empuja completamente a la derecha */
-    margin-right: 4rem; /* Más espacio del borde derecho */
-    order: 2; /* Posición en flexbox */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 2px solid transparent; /* Opcional para diseño */
+}
+
+.user-icon img {
+    width: 80% !important; /* Reduce el tamaño interno */
+    height: 80% !important;
+    object-fit: contain;
+    display: block;
+    padding: 2px; /* Espacio de respiro */
 }
 
 .user-icon:hover {
-    transform: scale(1.15);
-    filter: brightness(1.1);
+    transform: scale(1.1); /* 1.3rem era incorrecto */
 }
+
 
 .modal-backdrop {
     backdrop-filter: blur(5px);
@@ -353,16 +372,8 @@ button:hover {
 
 @media (max-width: 768px) {
     .user-icon {
-        font-size: 3rem;
-        margin-right: 1.5rem;
-    }
-    
-    .logo-img {
-        height: 80px;
-    }
-    
-    .menu_nav {
-        padding: 0 1rem;
+        font-size: 3rem; /* ← Esta regla estaba causando el problema */
+        margin-right: 1rem;
     }
 }
 
