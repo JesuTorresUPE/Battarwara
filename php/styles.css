@@ -1,0 +1,374 @@
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: beige !important; /* Azul claro pastel */
+    min-height: 100vh;
+}
+
+.header {
+    background-color: #04ADC9;
+    padding: 0.5rem;
+    display: flex;
+    position: relative;
+    justify-content: space-between; /* Asegura distribución adecuada */
+    align-items: center;
+    flex-wrap: nowrap; /* Previene saltos de línea */
+}
+
+.logo-img {
+    height: 120px; /* Tamaño aumentado del logo */
+    transition: transform 0.3s;
+    order: 1; /* Mantiene el logo a la izquierda */
+}
+
+.category-img {
+    max-height: 300px;
+    transition: 0.1s;
+   
+}
+
+.logo-img:hover {
+    transform: scale(1.05);
+}
+
+.nav_links {
+    display: flex;
+    margin-left: 1rem;
+    background-color:  beige;
+    padding: 1rem;
+    gap: 2rem;
+    list-style: none;
+}
+
+.nav_links a {
+    color: black;
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    padding: 0.5rem;
+}
+
+.nav_links a:hover {
+    color: blueviolet;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.menu_nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    padding: 0.5rem;
+    min-width: 100px;
+    top: 100%;
+    left: 0;
+}
+
+.dropdown:hover .dropdown-menu {
+    min-width: 85%;
+    align-items: center;
+    display: flex;
+    background-color: aqua;
+}
+
+.category-card {
+    background: aqua;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.about-section {
+    padding: 2rem;
+    background: white;
+    margin: 2rem 0;
+}
+
+.contact-section {
+    padding: 2rem;
+    background-color: #f8f9fa;
+}
+
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #04ADC9;
+    color: white;
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #039dbc;
+}
+
+.footer {
+    background-color: #333;
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.social-links a {
+    color: white;
+    transition: color 0.3s;
+}
+
+.social-links a:hover {
+    color: #04ADC9;
+}
+
+.carousel-section {
+    padding: 1rem;
+    position: relative;
+}
+
+.carousel-container {
+    position: relative;
+    background-color: aqua;
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.carousel-slide {
+    flex: 0 0 calc(25% - 20px); 
+    margin: 12px;
+    min-width: 280px;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.carousel-slide:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(4, 173, 201, 0.8);
+    color: white;
+    border: none;
+    padding: 1rem;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+}
+
+.carousel-btn:hover {
+    background: #039dbc;
+}
+
+.product-card {
+    position: relative;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-info {
+    padding: 1rem;
+    background: white;
+    border-top: 2px solid #04ADC9;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-title {
+    padding-top: 0.5rem;
+    padding-left: 1rem;
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    min-height: 40px;
+}
+
+.product-price {
+    padding-left: 1rem;
+    font-size: 1.3rem;
+    color: black;
+    font-weight: bold;
+    margin: 0.5rem 0;
+}
+
+.buy-btn {
+    background: teal;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.buy-btn:hover {
+    padding-left: 1rem;
+    background: #039dbc;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+.prev-btn {
+    left: 20px;
+}
+
+.next-btn {
+    right: 20px;
+}
+
+.login-form {
+    padding: 1rem;
+    min-width: 250px;
+}
+
+.login-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.login-form input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.error {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.user-icon {
+    cursor: pointer;
+    transition: transform 0.3s;
+    color: #04ADC9;
+    font-size: 4rem; /* Tamaño aumentado */
+    margin-left: auto; /* Lo empuja completamente a la derecha */
+    margin-right: 4rem; /* Más espacio del borde derecho */
+    order: 2; /* Posición en flexbox */
+}
+
+.user-icon:hover {
+    transform: scale(1.15);
+    filter: brightness(1.1);
+}
+
+.modal-backdrop {
+    backdrop-filter: blur(5px);
+    background-color: rgba(0,0,0,0.2);
+}
+
+.modal-content {
+    border-radius: 15px;
+    border: 2px solid #04ADC9;
+}
+
+.password-link {
+    font-size: 0.9rem;
+    color: #666;
+    cursor: pointer;
+}
+
+@media (max-width: 1200px) {
+    .carousel-slide {
+        flex: 0 0 calc(33.333% - 20px); /* 3 slides */
+    }
+}
+
+@media (max-width: 768px) {
+    .user-icon {
+        font-size: 3rem;
+        margin-right: 1.5rem;
+    }
+    
+    .logo-img {
+        height: 80px;
+    }
+    
+    .menu_nav {
+        padding: 0 1rem;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .carousel-slide {
+        flex: 0 0 calc(100% - 20px); /* 1 slide */
+    }
+}
