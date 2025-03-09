@@ -1,5 +1,109 @@
 <?php
-session_start(); // Solo una vez al inicio
+session_start();
+
+/**********************************************
+ * MANEJO DE IDIOMAS
+ **********************************************/
+$available_langs = ['es', 'en'];
+$default_lang = 'es';
+$cookie_time = time() + (86400 * 30);
+
+if (isset($_GET['lang']) && in_array($_GET['lang'], $available_langs)) {
+    $_SESSION['lang'] = $_GET['lang'];
+    setcookie('lang', $_GET['lang'], $cookie_time, '/');
+}
+
+if (isset($_COOKIE['lang'])) {
+    $_SESSION['lang'] = $_COOKIE['lang'];
+}
+
+$current_lang = $_SESSION['lang'] ?? $default_lang;
+
+/**********************************************
+ * TRADUCCIONES
+ **********************************************/
+$translations = [
+    'es' => [
+        'comprar_ahora' => 'Comprar Ahora',
+        'agregar_carrito' => 'Agregar al Carrito',
+        'topper' => 'Topper Multiusos',
+        'dispensador' => 'Dispensador',
+        'porta_fruta' => 'Porta Fruta',
+        'cuchillos' => 'Cuchillos Multiusos',
+        'porta_galletas' => 'Porta galletas',
+        'producto1_precio' => '$299.00 MXN',
+        'producto2_precio' => '$199.00 MXN',
+        'producto3_precio' => '$219.00 MXN',
+        'producto4_precio' => '$223.00 MXN',
+        'producto5_precio' => '$48.00 MXN',
+        'error_password' => 'Las contraseñas no coinciden',
+        'error_registro' => 'Error al registrar: ',
+        'error_login' => 'Contraseña incorrecta',
+        'error_usuario' => 'Usuario no encontrado',
+        'inicio' => 'Inicio',
+        'productos' => 'Productos',
+        'nosotros' => 'Nosotros',
+        'contacto' => 'Contáctanos',
+        'idiomas' => 'Idiomas',
+        'equipo' => 'Equipo 5',
+        'favoritos' => 'Favoritos del Mes',
+        'bienvenido' => 'Bienvenido',
+        'salir' => 'Salir',
+        'titulo_pagina' => 'Battarwara®',
+        'registrate' => '¿No tienes cuenta? Regístrate aquí',
+        'ingresar' => 'Ingresar',
+        'registrar' => 'Registrar',
+        'nosotros_texto' => 'Lorem ipsum dolor sit amet...',
+        'contacto_titulo' => 'Contáctanos',
+        'nombre' => 'Nombre',
+        'email' => 'E-mail',
+        'mensaje' => 'Mensaje',
+        'enviar' => 'Enviar',
+        'usuario' => 'Usuario',
+        'password' => 'Contraseña',
+        'confirm_password' => 'Confirmar Contraseña'
+    ],
+    'en' => [
+        'inicio' => 'Home',
+        'productos' => 'Products',
+        'nosotros' => 'About Us',
+        'contacto' => 'Contact',
+        'idiomas' => 'Languages',
+        'equipo' => 'Team 5',
+        'favoritos' => 'Monthly Favorites',
+        'bienvenido' => 'Welcome',
+        'salir' => 'Logout',
+        'titulo_pagina' => 'Battarwara®',
+        'registrate' => 'No account? Register here',
+        'ingresar' => 'Login',
+        'registrar' => 'Register',
+        'nosotros_texto' => 'Lorem ipsum dolor sit amet...',
+        'contacto_titulo' => 'Contact Us',
+        'nombre' => 'Name',
+        'email' => 'Email',
+        'mensaje' => 'Message',
+        'enviar' => 'Send',
+        'usuario' => 'Username',
+        'password' => 'Password',
+        'confirm_password' => 'Confirm Password',
+        'comprar_ahora' => 'Buy Now',
+        'agregar_carrito' => 'Add to Cart',
+        'topper' => 'Multiuse Topper',
+        'dispensador' => 'Dispenser',
+        'porta_fruta' => 'Fruit Holder',
+        'cuchillos' => 'Multiuse Knives',
+        'porta_galletas' => 'Cookie Holder',
+        'producto1_precio' => '$299.00 USD',
+        'producto2_precio' => '$199.00 USD',
+        'producto3_precio' => '$219.00 USD',
+        'producto4_precio' => '$223.00 USD',
+        'producto5_precio' => '$48.00 USD',
+        'error_password' => 'Passwords do not match',
+        'error_registro' => 'Registration error: ',
+        'error_login' => 'Incorrect password',
+        'error_usuario' => 'User not found'
+    ]
+];
 
 /**********************************************
  * CONEXIÓN A BASE DE DATOS
@@ -9,15 +113,12 @@ $username = "root";
 $password = "";
 $dbname = "battarwara";
 
-// Crear conexión
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Verificar conexión
 if ($conn->connect_error) {
-    die("Error de conexión: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
-// Crear tabla usuarios si no existe
 $sql = "CREATE TABLE IF NOT EXISTS usuarios (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(50) NOT NULL UNIQUE,
@@ -27,16 +128,14 @@ $sql = "CREATE TABLE IF NOT EXISTS usuarios (
 )";
 
 if (!$conn->query($sql)) {
-    die("Error creando tabla: " . $conn->error);
+    die("Error creating table: " . $conn->error);
 }
 
 /**********************************************
  * MANEJO DE SESIONES Y FORMULARIOS
  **********************************************/
-// Procesar registro
 $registro_error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar'])) {
-    // Validación y sanitización de datos
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $usuario = filter_input(INPUT_POST, 'usuario', FILTER_SANITIZE_STRING);
     $password = $_POST['password'];
@@ -47,12 +146,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar'])) {
     } else {
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
         
-        // Prevenir inyección SQL
         $stmt = $conn->prepare("INSERT INTO usuarios (email, usuario, password) VALUES (?, ?, ?)");
         $stmt->bind_param("sss", $email, $usuario, $password_hash);
         
         if ($stmt->execute()) {
-            // Redirección después de registro exitoso
             header("Location: index.php?registro=exito");
             exit;
         } else {
@@ -61,7 +158,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar'])) {
     }
 }
 
-// Procesar login
 $login_error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $usuario = filter_input(INPUT_POST, 'usuario', FILTER_SANITIZE_STRING);
@@ -86,7 +182,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     }
 }
 
-// Cerrar sesión
 if (isset($_GET['logout'])) {
     session_destroy();
     header("Location: index.php");
@@ -95,12 +190,12 @@ if (isset($_GET['logout'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="<?= $current_lang ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Battarwara®</title>
+    <title><?= $translations[$current_lang]['titulo_pagina'] ?></title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -110,25 +205,16 @@ if (isset($_GET['logout'])) {
     <header class="header">
         <nav class="menu_nav">
             <div class="logo">
-                <img src="BattarwaraLogo.PNG" alt="Logo Battarwara" class="logo-img">
+                <img src="BattarwaraLogo.PNG" alt="Logo" class="logo-img">
             </div>
-            <?php if(!isset($_SESSION['usuario'])): ?>
-                <i class="fas fa-user-circle user-icon" data-bs-toggle="modal" data-bs-target="#loginModal"></i>
-            <?php else: ?>
-                <div class="d-flex align-items-center gap-3 user-status">
-                    <span class="text-dark">Bienvenido, <?= htmlspecialchars($_SESSION['usuario']) ?></span>
-                    <a href="?logout=1" class="btn btn-sm btn-danger">Salir</a>
-                </div>
-            <?php endif; ?>
         </nav>
-</header>
+    </header>
 
-    <!-- Modales -->
     <div class="modal fade" id="loginModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Iniciar Sesión</h5>
+                    <h5 class="modal-title"><?= $translations[$current_lang]['ingresar'] ?></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <form method="POST">
@@ -137,19 +223,19 @@ if (isset($_GET['logout'])) {
                             <div class="alert alert-danger"><?= $login_error ?></div>
                         <?php endif; ?>
                         <div class="mb-3">
-                            <input type="text" name="usuario" class="form-control" placeholder="Usuario" required>
+                            <input type="text" name="usuario" class="form-control" placeholder="<?= $translations[$current_lang]['usuario'] ?>" required>
                         </div>
                         <div class="mb-3">
-                            <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
+                            <input type="password" name="password" class="form-control" placeholder="<?= $translations[$current_lang]['password'] ?>" required>
                         </div>
                         <div class="text-center">
                             <span class="password-link" data-bs-toggle="modal" data-bs-target="#registroModal">
-                                ¿No tienes cuenta? Regístrate aquí
+                                <?= $translations[$current_lang]['registrate'] ?>
                             </span>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" name="login" class="btn btn-primary w-100">Ingresar</button>
+                        <button type="submit" name="login" class="btn btn-primary w-100"><?= $translations[$current_lang]['ingresar'] ?></button>
                     </div>
                 </form>
             </div>
@@ -160,7 +246,7 @@ if (isset($_GET['logout'])) {
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Registro de Usuario</h5>
+                    <h5 class="modal-title"><?= $translations[$current_lang]['registrar'] ?></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <form method="POST">
@@ -169,20 +255,20 @@ if (isset($_GET['logout'])) {
                             <div class="alert alert-danger"><?= $registro_error ?></div>
                         <?php endif; ?>
                         <div class="mb-3">
-                            <input type="email" name="email" class="form-control" placeholder="Correo electrónico" required>
+                            <input type="email" name="email" class="form-control" placeholder="<?= $translations[$current_lang]['email'] ?>" required>
                         </div>
                         <div class="mb-3">
-                            <input type="text" name="usuario" class="form-control" placeholder="Usuario" required>
+                            <input type="text" name="usuario" class="form-control" placeholder="<?= $translations[$current_lang]['usuario'] ?>" required>
                         </div>
                         <div class="mb-3">
-                            <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
+                            <input type="password" name="password" class="form-control" placeholder="<?= $translations[$current_lang]['password'] ?>" required>
                         </div>
                         <div class="mb-3">
-                            <input type="password" name="confirm_password" class="form-control" placeholder="Confirmar Contraseña" required>
+                            <input type="password" name="confirm_password" class="form-control" placeholder="<?= $translations[$current_lang]['confirm_password'] ?>" required>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" name="registrar" class="btn btn-success w-100">Registrar</button>
+                        <button type="submit" name="registrar" class="btn btn-success w-100"><?= $translations[$current_lang]['registrar'] ?></button>
                     </div>
                 </form>
             </div>
@@ -190,30 +276,10 @@ if (isset($_GET['logout'])) {
     </div>
 
     <ul class="nav_links">
-        <?php if(isset($_SESSION['usuario'])): ?>
-            <li><a href="#">Bienvenido, <?php echo htmlspecialchars($_SESSION['usuario']); ?></a></li>
-            <li><a href="#">|</a></li>
-            <li><a href="?logout=1">Cerrar Sesión</a></li>
-        <?php else: ?>
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">Iniciar Sesión</a>
-                <div class="dropdown-menu login-form">
-                    <form method="POST">
-                        <?php if($error_login): ?>
-                            <div class="error"><?php echo $error_login; ?></div>
-                        <?php endif; ?>
-                        <input type="text" name="username" placeholder="Usuario" required>
-                        <input type="password" name="password" placeholder="Contraseña" required>
-                        <button type="submit" name="login">Ingresar</button>
-                    </form>
-                </div>
-                <li><a href="#">|</a></li>
-            </li>
-        <?php endif; ?>
-        <li><a href="#">Inicio</a></li>
+        <li><a href="#"><?= $translations[$current_lang]['inicio'] ?></a></li>
         <li><a href="#">|</a></li>
         <li class="dropdown">
-            <a href="#" class="dropdown-toggle">Productos</a>
+            <a href="#" class="dropdown-toggle"><?= $translations[$current_lang]['productos'] ?></a>
             <div class="dropdown-menu">
                 <a href="#">Cocina</a>
                 <a href="#">Recámara</a>
@@ -224,20 +290,32 @@ if (isset($_GET['logout'])) {
             </div>
             <li><a href="#">|</a></li>
         </li>
-        <li><a href="#">Nosotros</a></li>
+        <li><a href="#"><?= $translations[$current_lang]['nosotros'] ?></a></li>
         <li><a href="#">|</a></li>
-        <li><a href="#">Contáctanos</a></li>
+        <li><a href="#"><?= $translations[$current_lang]['contacto'] ?></a></li>
         <li><a href="#">|</a></li>
         <li class="dropdown">
-            <a href="#" class="dropdown-toggle">Idiomas</a>
+            <a href="#" class="dropdown-toggle"><?= $translations[$current_lang]['idiomas'] ?></a>
             <div class="dropdown-menu">
-                <a href="#">English</a>
-                <a href="#">Español</a>
+                <a href="?lang=en">English</a>
+                <a href="?lang=es">Español</a>
             </div>
             <li><a href="#">|</a></li>
         </li>
-        <li><a href="#">Equipo 5</a></li>
+        <li><a href="#"><?= $translations[$current_lang]['equipo'] ?></a></li>
         <li><a href="#">|</a></li>
+        <?php if(!isset($_SESSION['usuario'])): ?>
+            <div class="user-icon">
+                <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">
+                    <i class="fas fa-user"></i>
+                </a>
+            </div>
+        <?php else: ?>
+            <div class="user-status">
+                <span><?= $translations[$current_lang]['bienvenido'] ?>, <?= htmlspecialchars($_SESSION['usuario']) ?></span>
+                <a href="?logout=1" class="btn btn-sm btn-danger"><?= $translations[$current_lang]['salir'] ?></a>
+            </div>
+        <?php endif; ?>
     </ul>
 
     <main class="container">
@@ -255,29 +333,29 @@ if (isset($_GET['logout'])) {
                     </div>
                     <div class="carousel-slide">
                         <img src="Dispensador.jpg" alt="Dispensador" class="category-img">
-                        <h3 class="product-title">Topper Multiusos</h3>
-                        <p class="product-price">$299.00 MXN</p>
+                        <h3 class="product-title">Dispensador</h3>
+                        <p class="product-price">$199.00 MXN</p>
                         <button class="buy-btn">Comprar Ahora</button>
                         <button class="buy-btn">Agregar al Carrito</button>
                     </div>
                     <div class="carousel-slide">
                         <img src="PortaFruta.jpg" alt="PortaFruta" class="category-img">
-                        <h3 class="product-title">Topper Multiusos</h3>
-                        <p class="product-price">$299.00 MXN</p>
+                        <h3 class="product-title">Porta Fruta</h3>
+                        <p class="product-price">$219.00 MXN</p>
                         <button class="buy-btn">Comprar Ahora</button>
                         <button class="buy-btn">Agregar al Carrito</button>
                     </div>
                     <div class="carousel-slide">
                         <img src="Cuchillos.jpg" alt="Cuchillos" class="category-img">
-                        <h3 class="product-title">Topper Multiusos</h3>
-                        <p class="product-price">$299.00 MXN</p>
+                        <h3 class="product-title">Cuchillos Multiusos</h3>
+                        <p class="product-price">$223.00 MXN</p>
                         <button class="buy-btn">Comprar Ahora</button>
                         <button class="buy-btn">Agregar al Carrito</button>
                     </div>
                     <div class="carousel-slide">
                         <img src="PortaGalletas.jpg" alt="PortaGalletas" class="category-img">
-                        <h3 class="product-title">Topper Multiusos</h3>
-                        <p class="product-price">$299.00 MXN</p>
+                        <h3 class="product-title">Porta galletas</h3>
+                        <p class="product-price">$48.00 MXN</p>
                         <button class="buy-btn">Comprar Ahora</button>
                         <button class="buy-btn">Agregar al Carrito</button>
                     </div>
