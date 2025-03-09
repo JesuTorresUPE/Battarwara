@@ -1,3 +1,99 @@
+<?php
+session_start(); // Solo una vez al inicio
+
+/**********************************************
+ * CONEXIÓN A BASE DE DATOS
+ **********************************************/
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "battarwara";
+
+// Crear conexión
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar conexión
+if ($conn->connect_error) {
+    die("Error de conexión: " . $conn->connect_error);
+}
+
+// Crear tabla usuarios si no existe
+$sql = "CREATE TABLE IF NOT EXISTS usuarios (
+    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(50) NOT NULL UNIQUE,
+    usuario VARCHAR(30) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)";
+
+if (!$conn->query($sql)) {
+    die("Error creando tabla: " . $conn->error);
+}
+
+/**********************************************
+ * MANEJO DE SESIONES Y FORMULARIOS
+ **********************************************/
+// Procesar registro
+$registro_error = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar'])) {
+    // Validación y sanitización de datos
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    $usuario = filter_input(INPUT_POST, 'usuario', FILTER_SANITIZE_STRING);
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+
+    if ($password !== $confirm_password) {
+        $registro_error = "Las contraseñas no coinciden";
+    } else {
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+        
+        // Prevenir inyección SQL
+        $stmt = $conn->prepare("INSERT INTO usuarios (email, usuario, password) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $email, $usuario, $password_hash);
+        
+        if ($stmt->execute()) {
+            // Redirección después de registro exitoso
+            header("Location: index.php?registro=exito");
+            exit;
+        } else {
+            $registro_error = "Error al registrar: " . $conn->error;
+        }
+    }
+}
+
+// Procesar login
+$login_error = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
+    $usuario = filter_input(INPUT_POST, 'usuario', FILTER_SANITIZE_STRING);
+    $password = $_POST['password'];
+    
+    $stmt = $conn->prepare("SELECT * FROM usuarios WHERE usuario = ?");
+    $stmt->bind_param("s", $usuario);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        if (password_verify($password, $user['password'])) {
+            $_SESSION['usuario'] = $user['usuario'];
+            header("Location: index.php");
+            exit;
+        } else {
+            $login_error = "Contraseña incorrecta";
+        }
+    } else {
+        $login_error = "Usuario no encontrado";
+    }
+}
+
+// Cerrar sesión
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Location: index.php");
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -16,10 +112,104 @@
             <div class="logo">
                 <img src="BattarwaraLogo.PNG" alt="Logo Battarwara" class="logo-img">
             </div>
+            <?php if(!isset($_SESSION['usuario'])): ?>
+                <i class="fas fa-user-circle user-icon" data-bs-toggle="modal" data-bs-target="#loginModal"></i>
+            <?php else: ?>
+                <div class="d-flex align-items-center gap-3 user-status">
+                    <span class="text-dark">Bienvenido, <?= htmlspecialchars($_SESSION['usuario']) ?></span>
+                    <a href="?logout=1" class="btn btn-sm btn-danger">Salir</a>
+                </div>
+            <?php endif; ?>
         </nav>
-    </header>
+</header>
+
+    <!-- Modales -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Iniciar Sesión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST">
+                    <div class="modal-body">
+                        <?php if($login_error): ?>
+                            <div class="alert alert-danger"><?= $login_error ?></div>
+                        <?php endif; ?>
+                        <div class="mb-3">
+                            <input type="text" name="usuario" class="form-control" placeholder="Usuario" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
+                        </div>
+                        <div class="text-center">
+                            <span class="password-link" data-bs-toggle="modal" data-bs-target="#registroModal">
+                                ¿No tienes cuenta? Regístrate aquí
+                            </span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" name="login" class="btn btn-primary w-100">Ingresar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="registroModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registro de Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST">
+                    <div class="modal-body">
+                        <?php if($registro_error): ?>
+                            <div class="alert alert-danger"><?= $registro_error ?></div>
+                        <?php endif; ?>
+                        <div class="mb-3">
+                            <input type="email" name="email" class="form-control" placeholder="Correo electrónico" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" name="usuario" class="form-control" placeholder="Usuario" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" name="confirm_password" class="form-control" placeholder="Confirmar Contraseña" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" name="registrar" class="btn btn-success w-100">Registrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <ul class="nav_links">
+        <?php if(isset($_SESSION['usuario'])): ?>
+            <li><a href="#">Bienvenido, <?php echo htmlspecialchars($_SESSION['usuario']); ?></a></li>
+            <li><a href="#">|</a></li>
+            <li><a href="?logout=1">Cerrar Sesión</a></li>
+        <?php else: ?>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle">Iniciar Sesión</a>
+                <div class="dropdown-menu login-form">
+                    <form method="POST">
+                        <?php if($error_login): ?>
+                            <div class="error"><?php echo $error_login; ?></div>
+                        <?php endif; ?>
+                        <input type="text" name="username" placeholder="Usuario" required>
+                        <input type="password" name="password" placeholder="Contraseña" required>
+                        <button type="submit" name="login">Ingresar</button>
+                    </form>
+                </div>
+                <li><a href="#">|</a></li>
+            </li>
+        <?php endif; ?>
         <li><a href="#">Inicio</a></li>
         <li><a href="#">|</a></li>
         <li class="dropdown">

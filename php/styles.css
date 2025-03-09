@@ -16,14 +16,16 @@ body {
     background-color: #04ADC9;
     padding: 0.5rem;
     display: flex;
-    justify-content: space-between;
+    position: relative;
+    justify-content: space-between; /* Asegura distribución adecuada */
     align-items: center;
+    flex-wrap: nowrap; /* Previene saltos de línea */
 }
 
 .logo-img {
-    height: 80px;
+    height: 120px; /* Tamaño aumentado del logo */
     transition: transform 0.3s;
-    margin-left: 2rem;
+    order: 1; /* Mantiene el logo a la izquierda */
 }
 
 .category-img {
@@ -59,6 +61,14 @@ body {
 
 .dropdown {
     position: relative;
+}
+
+.menu_nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
 }
 
 .dropdown-menu {
@@ -281,6 +291,60 @@ button:hover {
     right: 20px;
 }
 
+.login-form {
+    padding: 1rem;
+    min-width: 250px;
+}
+
+.login-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.login-form input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.error {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.user-icon {
+    cursor: pointer;
+    transition: transform 0.3s;
+    color: #04ADC9;
+    font-size: 4rem; /* Tamaño aumentado */
+    margin-left: auto; /* Lo empuja completamente a la derecha */
+    margin-right: 4rem; /* Más espacio del borde derecho */
+    order: 2; /* Posición en flexbox */
+}
+
+.user-icon:hover {
+    transform: scale(1.15);
+    filter: brightness(1.1);
+}
+
+.modal-backdrop {
+    backdrop-filter: blur(5px);
+    background-color: rgba(0,0,0,0.2);
+}
+
+.modal-content {
+    border-radius: 15px;
+    border: 2px solid #04ADC9;
+}
+
+.password-link {
+    font-size: 0.9rem;
+    color: #666;
+    cursor: pointer;
+}
+
 @media (max-width: 1200px) {
     .carousel-slide {
         flex: 0 0 calc(33.333% - 20px); /* 3 slides */
@@ -288,13 +352,20 @@ button:hover {
 }
 
 @media (max-width: 768px) {
-    .carousel-container {
-        padding: 0 35px;
+    .user-icon {
+        font-size: 3rem;
+        margin-right: 1.5rem;
     }
-    .carousel-slide {
-        flex: 0 0 calc(50% - 20px); /* 2 slides */
+    
+    .logo-img {
+        height: 80px;
+    }
+    
+    .menu_nav {
+        padding: 0 1rem;
     }
 }
+
 
 @media (max-width: 480px) {
     .carousel-slide {
