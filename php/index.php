@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 
 /**********************************************
@@ -16,7 +20,7 @@ if (isset($_GET['lang']) && in_array($_GET['lang'], $available_langs)) {
         setcookie('lang', $_GET['lang'], $cookie_time, '/');
     }
     // Redirección limpia para eliminar parámetros GET
-    header("Location: " . strtok($_SERVER['REQUEST_URI'], '?'));
+    header("Location: http://battarwara.rf.gd/" . strtok($_SERVER['REQUEST_URI'], '?'));
     exit;
 }
 
@@ -109,10 +113,10 @@ $translations = [
 /**********************************************
  * CONEXIÓN A BASE DE DATOS
  **********************************************/
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "battarwara";
+$servername = "sql209.infinityfree.com";
+$username = "if0_38483469"; 
+$password = "L25Oqb7FE7B"; 
+$dbname = "if0_38483469_battarwara"; 
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -126,7 +130,7 @@ $sql = "CREATE TABLE IF NOT EXISTS usuarios (
     usuario VARCHAR(30) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)";
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
 
 if (!$conn->query($sql)) {
     die("Error creating table: " . $conn->error);
@@ -139,7 +143,7 @@ $registro_error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar'])) {
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $usuario = filter_input(INPUT_POST, 'usuario', FILTER_SANITIZE_STRING);
-    $password = $_POST['password'];
+    $password = $_POST['password']; 
     $confirm_password = $_POST['confirm_password'];
 
     if ($password !== $confirm_password) {
@@ -151,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar'])) {
         $stmt->bind_param("sss", $email, $usuario, $password_hash);
         
         if ($stmt->execute()) {
-            header("Location: index.php?registro=exito");
+            header("Location: http://battarwara.rf.gd/index.php?registro=exito");
             exit;
         } else {
             $registro_error = "Error al registrar: " . $conn->error;
@@ -173,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
         $user = $result->fetch_assoc();
         if (password_verify($password, $user['password'])) {
             $_SESSION['usuario'] = $user['usuario'];
-            header("Location: index.php");
+            header("Location: http://battarwara.rf.gd/index.php");
             exit;
         } else {
             $login_error = "Contraseña incorrecta";
@@ -185,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
 
 if (isset($_GET['logout'])) {
     session_destroy();
-    header("Location: index.php");
+    header("Location: http://battarwara.rf.gd/index.php");
     exit;
 }
 ?>
@@ -206,7 +210,7 @@ if (isset($_GET['logout'])) {
     <header class="header">
         <nav class="menu_nav" aria-label="Navegación principal">
             <div class="logo">
-                <img src="BattarwaraLogo.PNG" alt="Logo Battarwara" class="logo-img">
+                <img src="./BattarwaraLogo.PNG" alt="Logo Battarwara" class="logo-img">
             </div>
         </nav>
     </header>
