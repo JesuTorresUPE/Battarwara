@@ -204,9 +204,9 @@ if (isset($_GET['logout'])) {
 </head>
 <body>
     <header class="header">
-        <nav class="menu_nav">
+        <nav class="menu_nav" aria-label="Navegación principal">
             <div class="logo">
-                <img src="BattarwaraLogo.PNG" alt="Logo" class="logo-img">
+                <img src="BattarwaraLogo.PNG" alt="Logo Battarwara" class="logo-img">
             </div>
         </nav>
     </header>
@@ -221,22 +221,43 @@ if (isset($_GET['logout'])) {
                 <form method="POST">
                     <div class="modal-body">
                         <?php if($login_error): ?>
-                            <div class="alert alert-danger"><?= $login_error ?></div>
+                            <div class="alert alert-danger d-flex align-items-center gap-2">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <?= $login_error ?>
+                            </div>
                         <?php endif; ?>
-                        <div class="mb-3">
-                            <input type="text" name="usuario" class="form-control" placeholder="<?= $translations[$current_lang]['usuario'] ?>" required>
+                        
+                        <div class="mb-4">
+                            <label class="form-label text-muted small mb-1"><?= $translations[$current_lang]['usuario'] ?></label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <input type="text" name="usuario" class="form-control" required>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <input type="password" name="password" class="form-control" placeholder="<?= $translations[$current_lang]['password'] ?>" required>
+                        
+                        <div class="mb-4">
+                            <label class="form-label text-muted small mb-1"><?= $translations[$current_lang]['password'] ?></label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="password" name="password" class="form-control" required>
+                            </div>
                         </div>
-                        <div class="text-center">
+
+                        <div class="text-center mb-3">
                             <span class="password-link" data-bs-toggle="modal" data-bs-target="#registroModal">
                                 <?= $translations[$current_lang]['registrate'] ?>
                             </span>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" name="login" class="btn btn-primary w-100"><?= $translations[$current_lang]['ingresar'] ?></button>
+                    <div class="modal-footer bg-light">
+                        <button type="submit" name="login" class="btn btn-primary w-100 py-2">
+                            <i class="fas fa-sign-in-alt me-2"></i>
+                            <?= $translations[$current_lang]['ingresar'] ?>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -257,6 +278,7 @@ if (isset($_GET['logout'])) {
                         <?php endif; ?>
                         <div class="mb-3">
                             <input type="email" name="email" class="form-control" placeholder="<?= $translations[$current_lang]['email'] ?>" required>
+                            
                         </div>
                         <div class="mb-3">
                             <input type="text" name="usuario" class="form-control" placeholder="<?= $translations[$current_lang]['usuario'] ?>" required>
@@ -291,9 +313,9 @@ if (isset($_GET['logout'])) {
             </div>
             <li><a href="#">|</a></li>
         </li>
-        <li><a href="#"><?= $translations[$current_lang]['nosotros'] ?></a></li>
+        <li><a href="#nosotros"><?= $translations[$current_lang]['nosotros'] ?></a></li>
         <li><a href="#">|</a></li>
-        <li><a href="#"><?= $translations[$current_lang]['contacto'] ?></a></li>
+        <li><a href="#contacto"><?= $translations[$current_lang]['contacto'] ?></a></li>
         <li><a href="#">|</a></li>
         <li class="dropdown">
             <a href="#" class="dropdown-toggle"><?= $translations[$current_lang]['idiomas'] ?></a>
@@ -366,13 +388,13 @@ if (isset($_GET['logout'])) {
             </div>
         </section>        
         
-        <section class="about-section">
+        <section class="about-section" id="nosotros">
         <h2><?= $translations[$current_lang]['nosotros'] ?></h2>
         <p><?= $translations[$current_lang]['nosotros_texto'] ?></p>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ut diam quis quam vestibulum varius at vel nunc. Eliam eu felis nec quam porta lobortis. Quisque condimentum nibh ante, aliquam accumsan dolor laculis in. Ut porta, lacus eu auctor ornare, uma nisl tempor tellus, tempor pretium quam nulla la diam. Phasellus at lacinia lorem, pellentesque tristique risus. Vivamus sit amet elit cursus, ultrices dolor sed, dolichidum eran. Donec ornare nisl enim, vitae dictum lacus finibus et.</p>
         </section>
 
-        <section class="contact-section">
+        <section class="contact-section" id="contacto">
             <h2><?= $translations[$current_lang]['contacto'] ?></h2>
             <form class="contact-form">
                 <div class="form-row">
