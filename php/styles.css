@@ -23,7 +23,7 @@ body {
 }
 
 .logo-img {
-    height: 120px;
+    height: 80px;
     transition: transform 0.3s;
 }
 
@@ -41,10 +41,9 @@ body {
     display: flex;
     gap: 2rem; /* Reemplaza el margin-left */
     list-style: none;
-    padding: 0;
-    margin: 0;
-    flex-grow: 1; /* Ocupa el espacio disponible */
+    padding: 0.9rem;
     justify-content: center; /* Centra los links */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav_links a {
@@ -65,11 +64,12 @@ body {
 
 .menu_nav {
     display: flex;
-    justify-content: space-between; /* Distribuye el espacio */
-    align-items: center; /* Centra verticalmente */
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    padding: 0 2rem;
-    gap: 2rem; /* Espacio entre elementos */
+    padding: 0 1rem; /* Reducir padding en móviles */
+    gap: 1rem; /* Espacio más consistente */
+    flex-wrap: nowrap;
 }
 
 .dropdown-menu {
@@ -82,6 +82,16 @@ body {
     top: 100%;
     left: 0;
 }
+
+.dropdown-menu a {
+    transform: translateX(-5px);
+    transition: transform 0.3s;
+}
+
+.dropdown-menu a:hover {
+    transform: translateX(0);
+}
+
 
 .dropdown:hover .dropdown-menu {
     min-width: 85%;
@@ -120,6 +130,19 @@ body {
     gap: 1rem;
     margin-bottom: 1rem;
 }
+
+.form-control {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #04ADC9;
+    box-shadow: 0 0 0 3px rgba(4, 173, 201, 0.2);
+}
+
 
 input, textarea {
     width: 100%;
@@ -228,6 +251,21 @@ button:hover {
     background: #039dbc;
 }
 
+.btn-primary {
+    background: linear-gradient(135deg, #04ADC9, #039dbc);
+    border: none;
+    padding: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(4, 173, 201, 0.3);
+}
+
 .product-card {
     position: relative;
     background: white;
@@ -236,6 +274,16 @@ button:hover {
     height: 100%;
     display: flex;
     flex-direction: column;
+    transform: translateY(-5px) scale(1.02);
+    transition: all 0.3s ease-out;
+}
+
+
+.alert-danger {
+    background: #ffe6e6;
+    color: #dc3545;
+    border: none;
+    border-radius: 8px;
 }
 
 .product-info {
@@ -272,7 +320,10 @@ button:hover {
     padding: 0.5rem;
     border-radius: 0.4rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: 
+        transform 0.2s ease-in-out,
+        box-shadow 0.2s ease-in-out,
+        background 0.3s;
     width: 100%;
     font-size: 1rem;
 }
@@ -325,14 +376,12 @@ button:hover {
 .user-icon {
     max-width: 40px !important; /* Fuerza el tamaño */
     height: 40px !important;
-    margin-left: auto;
+    margin-left: 1rem;
     cursor: pointer;
     transition: transform 0.3s;
-    display: flex;
+    display: inline;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    border: 2px solid transparent; /* Opcional para diseño */
 }
 
 .user-icon img {
@@ -355,13 +404,67 @@ button:hover {
 
 .modal-content {
     border-radius: 15px;
-    border: 2px solid #04ADC9;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+}
+
+.modal-header {
+    background: #04ADC9;
+    color: white;
+    border-radius: 15px 15px 0 0;
+    padding: 1.5rem;
+    position: relative;
+    border-bottom: none;
+}
+
+.modal-title {
+    font-weight: 600;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.modal-title::before {
+    content: '';
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background: url('BattarwaraLogo.PNG') center/contain no-repeat;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.password-link:hover {
+    opacity: 0.8;
 }
 
 .password-link {
-    font-size: 0.9rem;
-    color: #666;
-    cursor: pointer;
+    color: #04ADC9 !important;
+    font-weight: 500;
+    transition: opacity 0.3s;
+}
+
+#registroModal .modal-header {
+    background: linear-gradient(135deg, #04ADC9, #039dbc);
+}
+
+#registroModal .btn-success {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    border: none;
+}
+
+@keyframes modalEntrance {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal.fade .modal-dialog {
+    animation: modalEntrance 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (max-width: 1200px) {

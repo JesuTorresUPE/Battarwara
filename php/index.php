@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 
 /**********************************************
@@ -16,7 +20,7 @@ if (isset($_GET['lang']) && in_array($_GET['lang'], $available_langs)) {
         setcookie('lang', $_GET['lang'], $cookie_time, '/');
     }
     // Redirección limpia para eliminar parámetros GET
-    header("Location: " . strtok($_SERVER['REQUEST_URI'], '?'));
+    header("Location: http://battarwara.rf.gd/" . strtok($_SERVER['REQUEST_URI'], '?'));
     exit;
 }
 
@@ -109,10 +113,10 @@ $translations = [
 /**********************************************
  * CONEXIÓN A BASE DE DATOS
  **********************************************/
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "battarwara";
+$servername = "sql209.infinityfree.com";
+$username = "if0_38483469"; 
+$password = "L25Oqb7FE7B"; 
+$dbname = "if0_38483469_battarwara"; 
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -126,7 +130,7 @@ $sql = "CREATE TABLE IF NOT EXISTS usuarios (
     usuario VARCHAR(30) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)";
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
 
 if (!$conn->query($sql)) {
     die("Error creating table: " . $conn->error);
@@ -139,7 +143,7 @@ $registro_error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar'])) {
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $usuario = filter_input(INPUT_POST, 'usuario', FILTER_SANITIZE_STRING);
-    $password = $_POST['password'];
+    $password = $_POST['password']; 
     $confirm_password = $_POST['confirm_password'];
 
     if ($password !== $confirm_password) {
@@ -151,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrar'])) {
         $stmt->bind_param("sss", $email, $usuario, $password_hash);
         
         if ($stmt->execute()) {
-            header("Location: index.php?registro=exito");
+            header("Location: http://battarwara.rf.gd/index.php?registro=exito");
             exit;
         } else {
             $registro_error = "Error al registrar: " . $conn->error;
@@ -173,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
         $user = $result->fetch_assoc();
         if (password_verify($password, $user['password'])) {
             $_SESSION['usuario'] = $user['usuario'];
-            header("Location: index.php");
+            header("Location: http://battarwara.rf.gd/index.php");
             exit;
         } else {
             $login_error = "Contraseña incorrecta";
@@ -185,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
 
 if (isset($_GET['logout'])) {
     session_destroy();
-    header("Location: index.php");
+    header("Location: http://battarwara.rf.gd/index.php");
     exit;
 }
 ?>
@@ -204,9 +208,9 @@ if (isset($_GET['logout'])) {
 </head>
 <body>
     <header class="header">
-        <nav class="menu_nav">
+        <nav class="menu_nav" aria-label="Navegación principal">
             <div class="logo">
-                <img src="BattarwaraLogo.PNG" alt="Logo" class="logo-img">
+                <img src="./BattarwaraLogo.PNG" alt="Logo Battarwara" class="logo-img">
             </div>
         </nav>
     </header>
@@ -221,22 +225,43 @@ if (isset($_GET['logout'])) {
                 <form method="POST">
                     <div class="modal-body">
                         <?php if($login_error): ?>
-                            <div class="alert alert-danger"><?= $login_error ?></div>
+                            <div class="alert alert-danger d-flex align-items-center gap-2">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <?= $login_error ?>
+                            </div>
                         <?php endif; ?>
-                        <div class="mb-3">
-                            <input type="text" name="usuario" class="form-control" placeholder="<?= $translations[$current_lang]['usuario'] ?>" required>
+                        
+                        <div class="mb-4">
+                            <label class="form-label text-muted small mb-1"><?= $translations[$current_lang]['usuario'] ?></label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <input type="text" name="usuario" class="form-control" required>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <input type="password" name="password" class="form-control" placeholder="<?= $translations[$current_lang]['password'] ?>" required>
+                        
+                        <div class="mb-4">
+                            <label class="form-label text-muted small mb-1"><?= $translations[$current_lang]['password'] ?></label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="password" name="password" class="form-control" required>
+                            </div>
                         </div>
-                        <div class="text-center">
+
+                        <div class="text-center mb-3">
                             <span class="password-link" data-bs-toggle="modal" data-bs-target="#registroModal">
                                 <?= $translations[$current_lang]['registrate'] ?>
                             </span>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" name="login" class="btn btn-primary w-100"><?= $translations[$current_lang]['ingresar'] ?></button>
+                    <div class="modal-footer bg-light">
+                        <button type="submit" name="login" class="btn btn-primary w-100 py-2">
+                            <i class="fas fa-sign-in-alt me-2"></i>
+                            <?= $translations[$current_lang]['ingresar'] ?>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -257,6 +282,7 @@ if (isset($_GET['logout'])) {
                         <?php endif; ?>
                         <div class="mb-3">
                             <input type="email" name="email" class="form-control" placeholder="<?= $translations[$current_lang]['email'] ?>" required>
+                            
                         </div>
                         <div class="mb-3">
                             <input type="text" name="usuario" class="form-control" placeholder="<?= $translations[$current_lang]['usuario'] ?>" required>
@@ -291,9 +317,9 @@ if (isset($_GET['logout'])) {
             </div>
             <li><a href="#">|</a></li>
         </li>
-        <li><a href="#"><?= $translations[$current_lang]['nosotros'] ?></a></li>
+        <li><a href="#nosotros"><?= $translations[$current_lang]['nosotros'] ?></a></li>
         <li><a href="#">|</a></li>
-        <li><a href="#"><?= $translations[$current_lang]['contacto'] ?></a></li>
+        <li><a href="#contacto"><?= $translations[$current_lang]['contacto'] ?></a></li>
         <li><a href="#">|</a></li>
         <li class="dropdown">
             <a href="#" class="dropdown-toggle"><?= $translations[$current_lang]['idiomas'] ?></a>
@@ -366,13 +392,13 @@ if (isset($_GET['logout'])) {
             </div>
         </section>        
         
-        <section class="about-section">
+        <section class="about-section" id="nosotros">
         <h2><?= $translations[$current_lang]['nosotros'] ?></h2>
         <p><?= $translations[$current_lang]['nosotros_texto'] ?></p>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ut diam quis quam vestibulum varius at vel nunc. Eliam eu felis nec quam porta lobortis. Quisque condimentum nibh ante, aliquam accumsan dolor laculis in. Ut porta, lacus eu auctor ornare, uma nisl tempor tellus, tempor pretium quam nulla la diam. Phasellus at lacinia lorem, pellentesque tristique risus. Vivamus sit amet elit cursus, ultrices dolor sed, dolichidum eran. Donec ornare nisl enim, vitae dictum lacus finibus et.</p>
         </section>
 
-        <section class="contact-section">
+        <section class="contact-section" id="contacto">
             <h2><?= $translations[$current_lang]['contacto'] ?></h2>
             <form class="contact-form">
                 <div class="form-row">
